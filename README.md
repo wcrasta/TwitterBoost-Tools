@@ -1,6 +1,6 @@
 # Twitter-Tools
 
-A program to boost your Twitter account/follower engagement. I've used these tools sporadically to grow my own Twitter account, [@warrencrasta](https://twitter.com/warrencrasta), with tremendous success.
+A program to boost your Twitter account/follower engagement. I've used these tools sporadically to grow my own Twitter account, [@warrencrasta](https://twitter.com/warrencrasta), with tremendous success. If you liked this project, or found these tools interesting, please consider starring the repository.
 
 **Screenshots:** http://i.imgur.com/GpTlULE.png
 
@@ -39,7 +39,7 @@ Feel free to contribute to this project! There are many improvements that can be
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request
 
-If you don't know how to implement something, but do have an idea that you would like to see implemented, feel free to shoot me an e-mail and I can try to implement it.
+If you do contribute, be advised that it may take some time to get your PR merged in. If you're interested in being a collaborator, e-mail me. If you don't know how to implement something, but do have an idea that you would like to see implemented, feel free to shoot me an e-mail and I can try to implement it.
 
 ## Credits
 
