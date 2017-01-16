@@ -4,11 +4,11 @@ import java.util.*;
 /* Optional Delay. */
 // import java.util.concurrent.TimeUnit;
 
-/* 
+/*
  * I have purposely ignored exceptions in most places, because I want the program
  * to continue running regardless of errors. If you want to see potential errors,
  * add the following code to try/catch blocks:
- * 
+ *
 	catch (TwitterException te) {
 		te.printStackTrace();
 		System.out.println("Error: " + te.getMessage());
@@ -17,7 +17,7 @@ import java.util.*;
  *
  */
 
-public class TwitterTools{	
+public class TwitterTools{
 	public static void main(String[] args) throws TwitterException, InterruptedException{
 		/* Note: Twitter Rate Limits -- Can only call the API 15 times in 15 minutes. */;
 		Scanner sc = new Scanner(System.in);
@@ -28,7 +28,7 @@ public class TwitterTools{
 					+ " back. (You can specify users to keep safe.)\n2. Follow users based"
 					+ " on a keyword they tweeted.\n3. Follow users based on a keyword in"
 					+ " their bio.\n4. Favorite tweets based on a keyword.\n5. Unfavorite"
-					+ " all of your tweets.\n");
+					+ " all of your tweets.\n6. Retweet tweets by keyword.\n");
 			int number;
 			do {
 				System.out.print("Enter the number of the tool you would like to use: ");
@@ -38,7 +38,7 @@ public class TwitterTools{
 				}
 				number = sc.nextInt();
 				sc.nextLine();
-			} while (number < 1 || number > 5);
+			} while (number < 1 || number > 6);
 			System.out.println();
 			Twitter twitter = TwitterFactory.getSingleton();
 			switch (number){
@@ -56,6 +56,9 @@ public class TwitterTools{
 				break;
 			case 5:
 				unfavoriteAllTweets(twitter, sc);
+				break;
+			case 6:
+				RTByKeyword(twitter, sc);
 				break;
 			}
 			System.out.print("Would you like to run another tool? (Yes/No): ");
@@ -100,7 +103,7 @@ public class TwitterTools{
 			}
 		}
 		System.out.println(neverUnfollow.size() + " users were added to the"
-				+ " Don't Unfollow list.");		
+				+ " Don't Unfollow list.");
 		System.out.println();
 		long cursor2 = -1;
 		IDs friends;
@@ -176,7 +179,7 @@ public class TwitterTools{
 			query = new Query(keyword);
 		} else{
 			query = new Query(keyword + " -filter:retweets");
-		}		
+		}
 		query.setResultType(Query.RECENT);
 		int follow;
 		do {
@@ -195,12 +198,12 @@ public class TwitterTools{
 		while (tweets.size() < follow) {
 			if (follow - tweets.size() > 100)
 				query.setCount(100);
-			else 
+			else
 				query.setCount(follow - tweets.size());
 			try {
 				QueryResult result = twitter.search(query);
 				tweets.addAll(result.getTweets());
-				for (Status t: tweets) 
+				for (Status t: tweets)
 					if(t.getId() < lastID) lastID = t.getId();
 			}
 			catch (TwitterException te) {
@@ -221,7 +224,7 @@ public class TwitterTools{
 			}
 		}
 		System.out.println();
-	}	
+	}
 
 	public static void followByBIO(Twitter twitter, Scanner sc) throws TwitterException{
 		System.out.println("Follow users based on a keyword in their bio. There are 20"
@@ -267,7 +270,7 @@ public class TwitterTools{
 							// TimeUnit.SECONDS.sleep(1);
 						} catch (TwitterException te) {
 							/* Ignore any errors and keep running. */
-						}	
+						}
 					} else {
 						break;
 					}
@@ -302,7 +305,7 @@ public class TwitterTools{
 			query = new Query(keyword);
 		} else{
 			query = new Query(keyword + " -filter:retweets");
-		}		
+		}
 		query.setResultType(Query.RECENT);
 		int favorite;
 		do {
@@ -321,12 +324,12 @@ public class TwitterTools{
 		while (tweets.size() < favorite) {
 			if (favorite - tweets.size() > 100)
 				query.setCount(100);
-			else 
+			else
 				query.setCount(favorite - tweets.size());
 			try {
 				QueryResult result = twitter.search(query);
 				tweets.addAll(result.getTweets());
-				for (Status t: tweets) 
+				for (Status t: tweets)
 					if(t.getId() < lastID) lastID = t.getId();
 			}
 			catch (TwitterException te) {
@@ -350,7 +353,6 @@ public class TwitterTools{
 		System.out.println();
 	}
 
-	/*  */
 	public static void unfavoriteAllTweets(Twitter twitter, Scanner sc) throws TwitterException{
 		System.out.println("Unfavorite all your favorites. If you have a lot of favorites, you"
 				+ " might have to run\nthis tool a few times to unfavorite all of them.");
@@ -378,4 +380,75 @@ public class TwitterTools{
 		}
 		System.out.println();
 	}
+
+	public static void RTByKeyword(Twitter twitter, Scanner sc) throws TwitterException {
+        System.out.println("Retweet tweets that contain a keyword.");
+        System.out.print("Enter keyword: ");
+        String keyword = sc.nextLine();
+        String ans;
+        do {
+            System.out.print("Include RTs? (Yes/No): ");
+            while (!sc.hasNext()) {
+                System.out.print("Include Retweets? (Yes/No): ");
+                sc.next();
+            }
+            ans = sc.nextLine();
+        } while (!(ans.equalsIgnoreCase("yes") || ans.equalsIgnoreCase("y")
+                || ans.equalsIgnoreCase("no") || ans.equalsIgnoreCase("n")));
+
+        Query query;
+        if (ans.equalsIgnoreCase("yes") || ans.equalsIgnoreCase("y")) {
+            query = new Query(keyword);
+        } else {
+            query = new Query(keyword + " -filter:retweets");
+        }
+        query.setResultType(Query.RECENT);
+        int RT;
+        do {
+            System.out.print("Enter number of tweets to retweet (max: 1000): ");
+            while (!sc.hasNextInt()) {
+                System.out.print("Enter number of tweets to retweet (max: 1000): ");
+                sc.next();
+            }
+            RT = sc.nextInt();
+            sc.nextLine();
+        } while (RT < 0 || RT > 1000);
+        System.out.println();
+        /* Add tweets to a list. */
+        long lastID = Long.MAX_VALUE;
+        ArrayList<Status> tweets = new ArrayList<Status>();
+        while (tweets.size() < RT) {
+            if (RT - tweets.size() > 100) {
+                query.setCount(100);
+            } else {
+                query.setCount(RT - tweets.size());
+            }
+            try {
+                QueryResult result = twitter.search(query);
+                tweets.addAll(result.getTweets());
+                for (Status t : tweets) {
+                    if (t.getId() < lastID) {
+                        lastID = t.getId();
+                    }
+                }
+            } catch (TwitterException te) {
+                System.out.println("Couldn't retrieve tweets: " + te);
+            };
+            query.setMaxId(lastID - 1);
+        }
+        /* RT all tweets in the tweets list. */
+        for (int i = 0; i < tweets.size(); i++) {
+            Status s = tweets.get(i);
+            try {
+                twitter.retweetStatus(s.getId());
+                System.out.println(i + 1 + ". Retweeted tweet by @"
+                        + s.getUser().getScreenName() + ".");
+                /* Optional Delay, in seconds. */
+                // TimeUnit.SECONDS.sleep(1);
+            } catch (TwitterException te) {
+                /* Ignore any errors and keep running. */
+            }
+        }
+        System.out.println();
+    }
 }
