@@ -2,7 +2,7 @@
 
 A program to boost your Twitter account/follower engagement. I've used these tools sporadically to grow my own Twitter account, [@warrencrasta](https://twitter.com/warrencrasta), with tremendous success. If you liked this project, or found these tools interesting, please consider starring the repository.
 
-**Screenshots:** http://i.imgur.com/GpTlULE.png
+**Screenshots:** http://i.imgur.com/92zSUmo.png
 
 **Features:**
 * Unfollow users who don't follow you back (with an option to save a group of people from being unfollowed).
@@ -10,6 +10,7 @@ A program to boost your Twitter account/follower engagement. I've used these too
 * Follow users based on a keyword in their bio (can follow a maximum of 1000 people every 24 hours).
 * Favorite tweets based on a keyword (can favorite a maximum of 1000 tweets every 24 hours).
 * Unfavorite all of your tweets.
+* Retweet tweets by keyword.
 
 **NOTE:** Use this program within the bounds of the [Twitter Terms of Service](https://twitter.com/tos?lang=en).
 

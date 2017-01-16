@@ -28,7 +28,7 @@ public class TwitterTools{
 					+ " back. (You can specify users to keep safe.)\n2. Follow users based"
 					+ " on a keyword they tweeted.\n3. Follow users based on a keyword in"
 					+ " their bio.\n4. Favorite tweets based on a keyword.\n5. Unfavorite"
-					+ " all of your tweets.\n6. Retweet by keyword they tweeted.\n");
+					+ " all of your tweets.\n6. Retweet tweets by keyword.\n");
 			int number;
 			do {
 				System.out.print("Enter the number of the tool you would like to use: ");
@@ -58,8 +58,8 @@ public class TwitterTools{
 				unfavoriteAllTweets(twitter, sc);
 				break;
 			case 6:
-          RTByKeyword(twitter, sc);
-          break;
+				RTByKeyword(twitter, sc);
+				break;
 			}
 			System.out.print("Would you like to run another tool? (Yes/No): ");
 			String s = sc.nextLine();
@@ -353,7 +353,6 @@ public class TwitterTools{
 		System.out.println();
 	}
 
-	/*  */
 	public static void unfavoriteAllTweets(Twitter twitter, Scanner sc) throws TwitterException{
 		System.out.println("Unfavorite all your favorites. If you have a lot of favorites, you"
 				+ " might have to run\nthis tool a few times to unfavorite all of them.");
