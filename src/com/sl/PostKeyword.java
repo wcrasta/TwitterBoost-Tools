@@ -97,9 +97,9 @@ public class PostKeyword extends HttpServlet {
 					RateLimitStatus status = rateLimitStatus.get(endpoint);
 					if (status.getRemaining() < status.getLimit()) {
 						out.println("<strong>Endpoint:</strong> " + endpoint + "<br />");
-						out.println("<strong>Limit:</strong>" + status.getLimit() + "<br />");
-						out.println("<strong>Remaining:</strong>" + status.getRemaining() + "<br />");
-						out.println("<strong>SecondsUntilReset:</strong>" + status.getSecondsUntilReset() + "<br /><br />");
+						out.println("<strong>Limit:</strong> " + status.getLimit() + "<br />");
+						out.println("<strong>Remaining:</strong> " + status.getRemaining() + "<br />");
+						out.println("<strong>Seconds until remaining resets:</strong> " + status.getSecondsUntilReset() + "<br /><br />");
 					}
 				}
 			} catch (TwitterException te) {

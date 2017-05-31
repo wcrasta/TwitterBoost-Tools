@@ -9,10 +9,6 @@ import java.sql.Statement;
 
 import com.utils.Setup;
 
-/**
- * @author srinivas
- * This file is to create Connections and Closing connections and statements.
- */
 public class DBConn {
     Connection con = null;
     static String className = "class sodhana.sdb.connection.DBConnection";

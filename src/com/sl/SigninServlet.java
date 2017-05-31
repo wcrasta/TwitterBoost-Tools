@@ -18,8 +18,8 @@ import java.io.IOException;
 
 @WebServlet("/signin")
 public class SigninServlet extends HttpServlet {
-    private static final long serialVersionUID = -6205814293093350242L;
-
+	private static final long serialVersionUID = -6205814293093350242L;
+	
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// configure twitter api with consumer key and secret key
 		ConfigurationBuilder cb = new ConfigurationBuilder();

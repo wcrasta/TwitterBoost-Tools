@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Results</title>
+<title>Follow Users by Tweet Keyword</title>
+<a href="index2.html">Tools Page</a>
 </head>
+<h2>Follow Users by Tweet Keyword</h2>
 <body>
-	<h1>Results</h1>
 	<p>
-		Twitter Boost Tools is a web application to boost your Twitter
-		account/follower engagement. For more information and to see the
-		source code of the project, checkout the <a
-			href="https://github.com/wcrasta/Twitter-Tools" target="_blank">GitHub
-			repository</a>. Created by <a href="https://twitter.com/warrencrasta/"
-			target="_blank">@warrencrasta</a>. <br />
-	<h3>Tools:</h3>
-	<ol>
-		<li>Unfollow users who don't follow you back (with an option to
-			save a group of people from being unfollowed).</li>
-		<li>Follow users based on a keyword they tweeted (can follow a
-			maximum of 1000 people every 24 hours).</li>
-		<li>Follow users based on a keyword in their bio (can follow a
-			maximum of 1000 people every 24 hours).</li>
-		<li>Favorite tweets based on a keyword (can favorite a maximum of
-			1000 tweets every 24 hours).</li>
-		<li>Unfavorite all of your tweets.</li>
-	</ol>
-	<center><a href="signin"><img src="images/sign-in-with-twitter-gray.png"></center>
+		Look for users who tweeted a certain keyword and follow them. <strong><font
+			color="red">Following large amounts of users can lead to
+				rate-limiting.</font></strong>
+	</p>
+
+
+	<form id="create" action="postKeyword" method="post">
+		<strong>Keyword:</strong> <input type="text" name="keyword" required><br>
+		<strong>Include RTs:</strong> <input type="radio" name="RTs"
+			value="yes" required> Yes<input type="radio" name="RTs"
+			value="no"> No<br> <strong>Number of users to
+			follow (max: 1000):</strong> <input type="number" name="follow" min="1"
+			max="1000" required><br /> <br /> <strong><font
+			color="red">Once you click submit, the server will follow the
+				number of users you specified, without stopping. If you understand,
+				re-enter the number of users to follow. </font></strong> <br /> <input
+			type="number" name="follow2" min="1" max="1000" required> <br />
+		<br /> <input type="submit" value="Submit">
+	</form>
 </body>
 </html>
