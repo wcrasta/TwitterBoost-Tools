@@ -1,7 +1,7 @@
 /*
  * IDEAS:
- * Make Twitter username/tweet clickable.
- * Include # of tweets unfavorited today in Rate Limiting Info
+ * Make Twitter username clickable.
+ * Include # of users followed today in Rate Limiting Info
  */
 
 package com.sl;
@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import twitter4j.*;
 import java.util.*;
 
-@WebServlet("/postUnfavorite")
-public class PostUnfavorite extends HttpServlet {
+@WebServlet("/postBiokeyword")
+public class PostBiokeyword extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
@@ -36,34 +36,47 @@ public class PostUnfavorite extends HttpServlet {
 		out.println("<body>");
 		out.println("<h2>Results</h2>");
 
-		String unfavorite = request.getParameter("unfavorite");
-		String unfavorite2 = request.getParameter("unfavorite2");
-
+		String query = request.getParameter("keyword");
+		int page = Integer.parseInt(request.getParameter("page"));
+		int follow = Integer.parseInt(request.getParameter("follow"));
+		int follow2 = Integer.parseInt(request.getParameter("follow2"));
 		Twitter twitter = (Twitter)request.getSession().getAttribute("twitter");
-		if (unfavorite.equalsIgnoreCase("yes") && unfavorite2.equalsIgnoreCase("I UNDERSTAND")) {
-			int page = 1;
-			ResponseList<Status> tweets;
+		if (follow == follow2) {
+			ResponseList<User> users;
 			int count = 0;
 			try {
 				do {
-					tweets = twitter.getFavorites();
-					for (Status s : tweets) {
-						twitter.destroyFavorite(s.getId());
-						out.println(count+1 + ". Unfavorited tweet by @" +
-								s.getUser().getScreenName() + ".<br />");
-						response.flushBuffer();
-						count++;
+					users = twitter.searchUsers(query, page);
+					for (User user : users) {
+						if (count < follow){
+							try{
+								twitter.createFriendship(user.getId());
+								out.println(count+1 + ". Following @" +
+										user.getScreenName() + ".<br/>");
+								response.flushBuffer();
+								count++;
+								/* Optional Delay, in seconds. */
+								// TimeUnit.SECONDS.sleep(1);
+							} catch (TwitterException te) {
+								if (te.toString().contains("You are unable to follow more people at this time.")) {
+									out.println("Couldn't follow users: " + te);
+									response.flushBuffer();
+									break;
+								}
+								/* Ignore any errors and keep running. */
+							}
+						} else {
+							break;
+						}
 					}
 					page++;
-				} while (tweets.size() != 0 && page < 50);
+				} while (users.size() != 0 && page < 50 && (count < follow));
 			} catch (TwitterException te) {
-				if (te.toString().contains("Your account may not be allowed to perform this action.")) {
-					out.println("Couldn't unfavorite tweets: " + te);
-					response.flushBuffer();
-					return;
-				}
-				/* Ignore any errors and keep running. */
+				out.println("Couldn't retrieve tweets: " + te);
+				response.flushBuffer();
+				return;
 			}
+
 			out.println("<h2>Twitter Rate-Limiting Info</h2>");
 			response.flushBuffer();
 
@@ -84,7 +97,7 @@ public class PostUnfavorite extends HttpServlet {
 				response.flushBuffer();
 			}
 		} else {
-			out.println("One or both of the values you entered in the previous page are incorrect. Click the Back Button on your browser to try again.");
+			out.println("The two follow numbers you entered did not match. Click the Back Button on your browser to try again.");
 			response.flushBuffer();
 		}
 		out.println("</body>");

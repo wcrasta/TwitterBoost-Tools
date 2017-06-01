@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Follow Users by Bio Keyword</title>
+<a href="index2.html">Tools Page</a>
+</head>
+<h2>Follow Users by Bio Keyword</h2>
+<body>
+	<p>
+		Look for users with a certain keyword in their bio and follow them. <strong><font
+			color="red">The maximum number of users you can follow in 24
+				hours is 1000.</font></strong>
+	</p>
+
+
+	<form action="postBiokeyword" method="post">
+		<strong>Keyword:</strong> <input type="text" name="keyword" required><br>
+		<strong>What page do you want to start on (max: 50):</strong> <input
+			type="number" name="page" min="1" max="50" required><br /> <strong>Number
+			of users to follow (max: 1000):</strong> <input type="number" name="follow"
+			min="1" max="1000" required><br /><i>There are 20 users/page,
+		so if you notice that you are following the same people over and over
+		again, use different pages. In most cases,you should use page 1 first.</i>
+		<br /><br /> <strong><font color="red">Once you click
+				submit, the server will follow the number of users you specified,
+				without stopping. If you understand, re-enter the number of users to
+				follow. </font></strong> <br /> <input type="number" name="follow2" min="1"
+			max="1000" required> <br /> <br /> <input type="submit"
+			value="Submit">
+	</form>
+</body>
+</html>
