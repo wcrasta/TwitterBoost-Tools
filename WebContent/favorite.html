@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Favorite Tweets by Keyword</title>
+<a href="index2.html">Tools Page</a>
+</head>
+<h2>Favorite Tweets by Keyword</h2>
+<body>
+	<p>
+		Favorite tweets that contain a certain keyword. <strong><font
+			color="red">The maximum number of tweets you can favorite in
+				24 hours is 1000.</font></strong>
+	</p>
+
+
+	<form action="postFavorite" method="post">
+		<strong>Keyword:</strong> <input type="text" name="keyword" required><br>
+		<strong>Include RTs:</strong> <input type="radio" name="RTs"
+			value="yes" required> Yes<input type="radio" name="RTs"
+			value="no"> No<br> <strong>Number of tweets to
+			favorite (max: 1000):</strong> <input type="number" name="favorite" min="1"
+			max="1000" required><br /> <br /> <strong><font
+			color="red">Once you click submit, the server will favorite the
+				number of tweets you specified, without stopping. If you understand,
+				re-enter the number of tweets to favorite. </font></strong> <br /> <input
+			type="number" name="favorite2" min="1" max="1000" required> <br />
+		<br /> <input type="submit" value="Submit">
+	</form>
+</body>
+</html>
