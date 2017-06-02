@@ -13,19 +13,24 @@
 
 	<form action="postUnfollow" method="post">
 		Do you already have a "Never Unfollow" whitelist? <input id="already1"
-			type="radio" name="already" value="yes" required> Yes
-			<div id='already1div' style='display: none'>
+			type="radio" name="already" value="yes"> Yes <input
+			id='already2' type="radio" name="already" value="no"> No <br />
+		<div id='already1div' style='display: none'>
 			<strong>Specify the owner of the list:</strong> <input type="text"
-				name="owner" required><br> <strong>Specify
-				the name of the list:</strong> <input type="text" name="listName" required><br>
+				name="owner"><br> <strong>Specify the name of
+				the list:</strong> <input id="listName" type="text" name="listName"><br>
 		</div>
-	
-	
+		<div id='already2div' style='display: none'>
+			Should we add everyone you're currently following to a "Never
+			Unfollow" whitelist? <input id="already3" type="radio"
+				name="already2" value="yes"> Yes <input id='already4'
+				type="radio" name="already2" value="no"> No <br />
+		</div>
 		<br /> <strong><font color="red">Once you click
 				submit, the server will unfollow ALL of your non-followers EXCEPT
 				THOSE PROTECTED BY YOUR NEVER UNFOLLOW LIST, without stopping. If
 				you understand, enter "I UNDERSTAND". </font></strong><br /> <input type="text"
-			name="unfavorite2" required> <br /> <br /> <input
+			name="unfollow" required> <br /> <br /> <input
 			type="submit" value="Submit"></a>
 	</form>
 	<script>
@@ -35,15 +40,19 @@
 							function() {
 								if ($(this).attr('id') == 'already1') {
 									$('#already1div').show();
+									$('#listName').prop('required', true);
 								} else {
 									$('#already1div').hide();
+									$('#listName').prop('required', false);
 								}
 								if ($(this).attr('id') == 'already2'
 										|| $(this).attr('id') == 'already3'
 										|| $(this).attr('id') == 'already4') {
 									$('#already2div').show();
+									$('#already3').prop('required', true);
 								} else {
 									$('#already2div').hide();
+									$('#already3').prop('required', false);
 								}
 							});
 				});
