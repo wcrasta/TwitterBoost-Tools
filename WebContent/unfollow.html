@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<title>Unfollow Non-Followers</title>
+<a href="index2.html">Tools Page</a>
+</head>
+<h2>Unfollow Non-Followers</h2>
+<body>
+
+	<p>Unfollow everyone who doesn't follow you back.</p>
+
+	<form action="postUnfollow" method="post">
+		Do you already have a "Never Unfollow" whitelist? <input id="already1"
+			type="radio" name="already" value="yes" required> Yes
+			<div id='already1div' style='display: none'>
+			<strong>Specify the owner of the list:</strong> <input type="text"
+				name="owner" required><br> <strong>Specify
+				the name of the list:</strong> <input type="text" name="listName" required><br>
+		</div>
+	
+	
+		<br /> <strong><font color="red">Once you click
+				submit, the server will unfollow ALL of your non-followers EXCEPT
+				THOSE PROTECTED BY YOUR NEVER UNFOLLOW LIST, without stopping. If
+				you understand, enter "I UNDERSTAND". </font></strong><br /> <input type="text"
+			name="unfavorite2" required> <br /> <br /> <input
+			type="submit" value="Submit"></a>
+	</form>
+	<script>
+		$(document).ready(
+				function() {
+					$('input[type="radio"]').click(
+							function() {
+								if ($(this).attr('id') == 'already1') {
+									$('#already1div').show();
+								} else {
+									$('#already1div').hide();
+								}
+								if ($(this).attr('id') == 'already2'
+										|| $(this).attr('id') == 'already3'
+										|| $(this).attr('id') == 'already4') {
+									$('#already2div').show();
+								} else {
+									$('#already2div').hide();
+								}
+							});
+				});
+	</script>
+</body>
+</html>
