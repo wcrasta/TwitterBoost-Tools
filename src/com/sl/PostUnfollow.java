@@ -40,12 +40,12 @@ public class PostUnfollow extends HttpServlet {
 		String owner = request.getParameter("owner");
 		String listName = request.getParameter("listName");
 		String unfollow = request.getParameter("unfollow");
-		String already2 = request.getParameter("already2");
+		String already = request.getParameter("already");
 		String already3 = request.getParameter("already3");
 
 		if (unfollow.equalsIgnoreCase("I UNDERSTAND")) {
 			List<Long> neverUnfollow = new ArrayList<Long>();
-			if (already2 != null && !already2.isEmpty() && already3 != null && !already3.isEmpty()){
+			if (already.equals("no") && already3.equals("yes")){
 				long cursor2 = -1;
 				IDs friends;
 				int count = 0;
@@ -60,17 +60,6 @@ public class PostUnfollow extends HttpServlet {
 							neverUnfollow.add(id);
 						}
 					} while ((cursor2 = friends.getNextCursor()) != 0);
-					try {
-						UserList newList = twitter.createUserList("Never Unfollow", false, "Created by @warrencrasta Twitter-Tools");
-						for (int i = 0; i < neverUnfollow.size(); i += 100) {
-							List<Long> sub = neverUnfollow.subList(i, Math.min(neverUnfollow.size(),i+100));
-							twitter.createUserListMembers(newList.getId(), neverUnfollow.stream().mapToLong(l -> l).toArray());						
-						}						
-					} catch (TwitterException te) {
-						out.println("Couldn't create Never Unfollow List: " + te + "<br/>");
-						response.flushBuffer();
-						return;
-					}
 				} catch (TwitterException te) {
 					out.println("Failed to get friends' ids: " + te + "<br/>");
 					response.flushBuffer();
@@ -98,23 +87,14 @@ public class PostUnfollow extends HttpServlet {
 					/* Ignore any errors and keep running. */
 				}
 			}
-			
-			if (already2 != null && !already2.isEmpty() && already3 != null && !already3.isEmpty()) {
-				try {
-					out.println("<br/> <strong>" + neverUnfollow.size() + "</strong> users were added to the"
-							+ " <a href='https://twitter.com/" + twitter.getScreenName() + "/lists/never-unfollow' target='_blank'>Never Unfollow list</a>.<br/><br/>");
-					response.flushBuffer();
-				} catch (TwitterException te) {
-					out.println("Failed to get user's username: " + te);
-					response.flushBuffer();
-					return;
-				}
-			} else {
-				out.println("<br/> <strong>" + neverUnfollow.size() + "</strong> users were added to the"
-						+ " Never Unfollow list.<br/><br/>");
+			out.println("<br/> <strong>" + neverUnfollow.size() + "</strong> users were added to the"
+					+ " Never Unfollow list.<br/>");
+			response.flushBuffer();
+
+			if (already.equals("no") && already3.equals("yes")) {
+				out.println("<strong>NOTE:</strong> We did not add users to a list on Twitter because that can be buggy.<br/>");
 				response.flushBuffer();
 			}
-	
 			long cursor2 = -1;
 			IDs friends;
 			ArrayList<Long> following = new ArrayList<Long>();
@@ -130,7 +110,7 @@ public class PostUnfollow extends HttpServlet {
 				response.flushBuffer();
 				return;
 			}
-	
+
 			long cursor3 = -1;
 			IDs followerIDs;
 			ArrayList<Long> followers = new ArrayList<Long>();
@@ -167,10 +147,10 @@ public class PostUnfollow extends HttpServlet {
 				}
 			}
 			out.println("<br/><strong>" + count2 + "</strong> users were unfollowed.<br/>");
-			
+
 			out.println("<h2>Twitter Rate-Limiting Info</h2>");
 			response.flushBuffer();
-	
+
 			Map<String, RateLimitStatus> rateLimitStatus;
 			try {
 				rateLimitStatus = twitter.getRateLimitStatus();
@@ -191,7 +171,7 @@ public class PostUnfollow extends HttpServlet {
 			out.println("You did not type \"I UNDERSTAND\" correctly. Click the Back Button on your browser to try again.<br/>");
 			response.flushBuffer();
 		}
-		
+
 		out.println("</body>");
 		out.println("</html>");
 	}
