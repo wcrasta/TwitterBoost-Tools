@@ -59,8 +59,22 @@ public class PostUnfollow extends HttpServlet {
 							response.flushBuffer();
 							count++;
 							neverUnfollow.add(id);
+							// Can also add users to Twitter list here.
+							// http://twitter4j.org/javadoc/twitter4j/api/ListsResources.html#createUserListMember-long-long-
 						}
 					} while ((cursor2 = friends.getNextCursor()) != 0);
+					try {
+						// Add users to Twitter list here.
+						UserList newList = twitter.createUserList("Never Unfollow", false, "Created by @warrencrasta's Twitter Tools.");
+						for (int i = 0; i < neverUnfollow.size(); i += 100) {
+							List<Long> sub = neverUnfollow.subList(i, Math.min(neverUnfollow.size(), i + 100));
+							twitter.createUserListMembers(newList.getId(), sub.stream().mapToLong(l -> l).toArray());
+						}
+					} catch (TwitterException te) {
+						out.println("Couldn't create Twitter list: " + te + "<br/>");
+						response.flushBuffer();
+						return;
+					}
 				} catch (TwitterException te) {
 					out.println("Failed to get friends' ids: " + te + "<br/>");
 					response.flushBuffer();
@@ -88,14 +102,22 @@ public class PostUnfollow extends HttpServlet {
 					/* Ignore any errors and keep running. */
 				}
 			}
-			out.println("<strong>" + neverUnfollow.size() + "</strong> users were added to the"
-					+ " Never Unfollow list.<br/><br/>");
-			response.flushBuffer();
-
 			if (already.equals("no") && already3.equals("yes")) {
-				out.println("<strong>NOTE:</strong> We did not add the above users to a list on Twitter because the Twitter API says that doing so can be buggy.<br/>");
+				try {
+					out.println("<strong>" + neverUnfollow.size() + "</strong> users were added to the <a href='https://twitter.com/"
+							+ twitter.getScreenName() + "/lists/' target='_blank'>Never Unfollow list</a>.<br/><br/>");
+					response.flushBuffer();
+				} catch (TwitterException te) {
+					out.println("Failed to get user's username: " + te);
+					response.flushBuffer();
+					return;
+				}
+			} else {
+				out.println("<strong>" + neverUnfollow.size() + "</strong> users were added to the"
+						+ " Never Unfollow list.<br/><br/>");
 				response.flushBuffer();
 			}
+
 			long cursor2 = -1;
 			IDs friends;
 			ArrayList<Long> following = new ArrayList<Long>();
