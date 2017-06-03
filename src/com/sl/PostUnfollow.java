@@ -1,7 +1,6 @@
 /*
  * IDEAS:
- * Make Twitter username clickable.
- * Include # of users followed today in Rate Limiting Info
+ * Include # of users unfollowed in last 24 hours in Rate Limiting Info.
  */
 
 package com.sl;
@@ -44,6 +43,8 @@ public class PostUnfollow extends HttpServlet {
 		String already3 = request.getParameter("already3");
 
 		if (unfollow.equalsIgnoreCase("I UNDERSTAND")) {
+			out.println("To stop the process at any time, click the <strong><font color='red'>Stop loading this page</font></strong> button on your browser.<br/><br/>");
+			response.flushBuffer();
 			List<Long> neverUnfollow = new ArrayList<Long>();
 			if (already.equals("no") && already3.equals("yes")){
 				long cursor2 = -1;
@@ -53,8 +54,8 @@ public class PostUnfollow extends HttpServlet {
 					do {
 						friends = twitter.getFriendsIDs(cursor2);
 						for (long id : friends.getIDs()) {
-							out.println(count+1 + ". Adding @" + twitter.showUser(id).getScreenName() +
-									" to Never Unfollow list.<br/>");
+							out.println(count+1 + ". Adding <a href='https://twitter.com/" + twitter.showUser(id).getScreenName() + "' target='_blank'>@" + twitter.showUser(id).getScreenName() +
+									"</a> to the Never Unfollow list.<br/>");
 							response.flushBuffer();
 							count++;
 							neverUnfollow.add(id);
@@ -73,26 +74,26 @@ public class PostUnfollow extends HttpServlet {
 					do {
 						users = twitter.getUserListMembers(owner, listName, cursor);
 						for (User user : users) {
-							out.println(count+1 + ". Adding @" + user.getScreenName() +
-									" to Never Unfollow list.<br/>");
+							out.println(count+1 + ". Adding <a href='https://twitter.com/" + user.getScreenName() + "' target='_blank'>@" + user.getScreenName() +
+									"</a> to Never Unfollow list.<br/>");
 							response.flushBuffer();
 							count++;
 							neverUnfollow.add(user.getId());
 						}
 					} while ((cursor = users.getNextCursor()) != 0);
 				} catch (TwitterException te) {
-					out.println("Failed to get list members: " + te);
+					out.println("Failed to get list members: " + te + "<br/>");
 					response.flushBuffer();
 					return;
 					/* Ignore any errors and keep running. */
 				}
 			}
-			out.println("<br/> <strong>" + neverUnfollow.size() + "</strong> users were added to the"
-					+ " Never Unfollow list.<br/>");
+			out.println("<strong>" + neverUnfollow.size() + "</strong> users were added to the"
+					+ " Never Unfollow list.<br/><br/>");
 			response.flushBuffer();
 
 			if (already.equals("no") && already3.equals("yes")) {
-				out.println("<strong>NOTE:</strong> We did not add users to a list on Twitter because that can be buggy.<br/>");
+				out.println("<strong>NOTE:</strong> We did not add the above users to a list on Twitter because the Twitter API says that doing so can be buggy.<br/>");
 				response.flushBuffer();
 			}
 			long cursor2 = -1;
@@ -134,8 +135,7 @@ public class PostUnfollow extends HttpServlet {
 					if(!neverUnfollow.contains(following.get(i))){
 						try {
 							twitter.destroyFriendship(following.get(i));
-							out.println(+ count2+1 + ". Unfollowed @" +
-									twitter.showUser(following.get(i)).getScreenName() + ".<br/>");
+							out.println(count2+1 + ". Unfollowed <a href='https://twitter.com/" + twitter.showUser(following.get(i)).getScreenName() +"' target='_blank'>@" + twitter.showUser(following.get(i)).getScreenName() + ".</a><br/>");
 							response.flushBuffer();
 							count2++;
 							/* Optional Delay, in seconds. */
@@ -146,7 +146,7 @@ public class PostUnfollow extends HttpServlet {
 					}
 				}
 			}
-			out.println("<br/><strong>" + count2 + "</strong> users were unfollowed.<br/>");
+			out.println("<strong>" + count2 + "</strong> users were unfollowed.<br/>");
 
 			out.println("<h2>Twitter Rate-Limiting Info</h2>");
 			response.flushBuffer();
@@ -164,7 +164,7 @@ public class PostUnfollow extends HttpServlet {
 					}
 				}
 			} catch (TwitterException te) {
-				out.println("Couldn't retrieve rate-limits: " + te);
+				out.println("Couldn't retrieve rate-limits: " + te + "<br />");
 				response.flushBuffer();
 			}
 		} else {

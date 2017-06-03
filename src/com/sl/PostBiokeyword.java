@@ -1,7 +1,6 @@
 /*
  * IDEAS:
- * Make Twitter username clickable.
- * Include # of users followed today in Rate Limiting Info
+ * Include # of users followed today in Rate Limiting Info.
  */
 
 package com.sl;
@@ -42,6 +41,8 @@ public class PostBiokeyword extends HttpServlet {
 		int follow2 = Integer.parseInt(request.getParameter("follow2"));
 		Twitter twitter = (Twitter)request.getSession().getAttribute("twitter");
 		if (follow == follow2) {
+			out.println("To stop the process at any time, click the <strong><font color='red'>Stop loading this page</font></strong> button on your browser.<br/><br/>");
+			response.flushBuffer();
 			ResponseList<User> users;
 			int count = 0;
 			try {
@@ -51,15 +52,15 @@ public class PostBiokeyword extends HttpServlet {
 						if (count < follow){
 							try{
 								twitter.createFriendship(user.getId());
-								out.println(count+1 + ". Following @" +
-										user.getScreenName() + ".<br/>");
+								out.println(count+1 + ". Following <a href='https://twitter.com/" + user.getScreenName() + "' target='_blank'>@" +
+										user.getScreenName() + "</a>.<br/>");
 								response.flushBuffer();
 								count++;
 								/* Optional Delay, in seconds. */
 								// TimeUnit.SECONDS.sleep(1);
 							} catch (TwitterException te) {
 								if (te.toString().contains("You are unable to follow more people at this time.")) {
-									out.println("Couldn't follow users: " + te);
+									out.println("Couldn't follow users: " + te + "<br/>");
 									response.flushBuffer();
 									break;
 								}
@@ -72,7 +73,7 @@ public class PostBiokeyword extends HttpServlet {
 					page++;
 				} while (users.size() != 0 && page < 50 && (count < follow));
 			} catch (TwitterException te) {
-				out.println("Couldn't retrieve tweets: " + te);
+				out.println("Couldn't retrieve tweets: " + te + "<br/>");
 				response.flushBuffer();
 				return;
 			}
@@ -93,11 +94,11 @@ public class PostBiokeyword extends HttpServlet {
 					}
 				}
 			} catch (TwitterException te) {
-				out.println("Couldn't retrieve rate-limits: " + te);
+				out.println("Couldn't retrieve rate-limits: " + te + "<br/>");
 				response.flushBuffer();
 			}
 		} else {
-			out.println("The two follow numbers you entered did not match. Click the Back Button on your browser to try again.");
+			out.println("The two follow numbers you entered did not match. Click the Back Button on your browser to try again. <br/>");
 			response.flushBuffer();
 		}
 		out.println("</body>");

@@ -1,7 +1,6 @@
 /*
  * IDEAS:
- * Make Twitter username clickable.
- * Include # of tweets favorited today in Rate Limiting Info
+ * Include # of tweets favorited today in Rate Limiting Info.
  */
 
 package com.sl;
@@ -42,6 +41,8 @@ public class PostFavorite extends HttpServlet {
 		int favorite2 = Integer.parseInt(request.getParameter("favorite2"));
 		Twitter twitter = (Twitter)request.getSession().getAttribute("twitter");
 		if (favorite == favorite2) {
+			out.println("To stop the process at any time, click the <strong><font color='red'>Stop loading this page</font></strong> button on your browser.<br/><br/>");
+			response.flushBuffer();
 			Query query;
 			if(ans.equalsIgnoreCase("yes") || ans.equalsIgnoreCase("y")) {
 				query = new Query(keyword);
@@ -65,7 +66,7 @@ public class PostFavorite extends HttpServlet {
 						if(t.getId() < lastID) lastID = t.getId();
 				}
 				catch (TwitterException te) {
-					out.println("Couldn't retrieve tweets: " + te);
+					out.println("Couldn't retrieve tweets: " + te + "<br/>");
 					response.flushBuffer();
 					break;
 				};
@@ -76,12 +77,12 @@ public class PostFavorite extends HttpServlet {
 				Status s = tweets.get(i);
 				try {
 					twitter.createFavorite(s.getId());
-					out.println(i+1 + ". Favoriting tweet by @" + s.getUser().getScreenName() + ".<br />");
+					out.println(i+1 + ". Favoriting <a href='https://twitter.com/" + s.getUser().getScreenName() + "/status/" + s.getId() +"' target='_blank'>tweet</a> by <a href='https://twitter.com/" + s.getUser().getScreenName() + "' target='_blank'>@" + s.getUser().getScreenName() + "</a>.<br />");
 					response.flushBuffer();
 				} catch (TwitterException te) {
 					/* Ignore any errors and keep running. */
 					if (te.toString().contains("Your account may not be allowed to perform this action.")) {
-						out.println("Couldn't favorite tweets: " + te);
+						out.println("Couldn't favorite tweets: " + te + "<br/>");
 						response.flushBuffer();
 						break;
 					}
@@ -103,11 +104,11 @@ public class PostFavorite extends HttpServlet {
 					}
 				}
 			} catch (TwitterException te) {
-				out.println("Couldn't retrieve rate-limits: " + te);
+				out.println("Couldn't retrieve rate-limits: " + te + "<br/>");
 				response.flushBuffer();
 			}
 		} else {
-			out.println("The two favorite numbers you entered did not match. Click the Back Button on your browser to try again.");
+			out.println("The two favorite numbers you entered did not match. Click the Back Button on your browser to try again.<br/>");
 			response.flushBuffer();
 		}
 		out.println("</body>");

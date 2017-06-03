@@ -1,7 +1,6 @@
 /*
  * IDEAS:
- * Make Twitter username clickable.
- * Include # of users followed today in Rate Limiting Info
+ * Include # of users followed today in Rate Limiting Info.
  */
 
 package com.sl;
@@ -71,12 +70,14 @@ public class PostKeyword extends HttpServlet {
 				};
 				query.setMaxId(lastID-1);
 			}
+			out.println("To stop the process at any time, click the <strong><font color='red'>Stop loading this page</font></strong> button on your browser.<br/><br/>");
+			response.flushBuffer();
 			/* Follow all users in the tweets list. */
 			for (int i = 0; i < tweets.size(); i++){
 				Status s = tweets.get(i);
 				try {
 					twitter.createFriendship(s.getUser().getId());
-					out.println(i+1 + ". Following @" + s.getUser().getScreenName() + ".<br />");
+					out.println(i+1 + ". Following <a href='https://twitter.com/" + s.getUser().getScreenName() + "' target='_blank'>@" + s.getUser().getScreenName() + "</a>.<br />");
 					response.flushBuffer();
 				} catch (TwitterException te) {
 					/* Ignore any errors and keep running. */

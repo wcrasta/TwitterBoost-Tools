@@ -1,7 +1,7 @@
 /*
  * IDEAS:
- * Make Twitter username/tweet clickable.
- * Include # of tweets unfavorited today in Rate Limiting Info
+ * Include # of tweets unfavorited today in Rate Limiting Info.
+ * Instead of unfavoriting all tweets, unfavorite only tweets from users you do not follow.
  */
 
 package com.sl;
@@ -41,6 +41,8 @@ public class PostUnfavorite extends HttpServlet {
 
 		Twitter twitter = (Twitter)request.getSession().getAttribute("twitter");
 		if (unfavorite.equalsIgnoreCase("yes") && unfavorite2.equalsIgnoreCase("I UNDERSTAND")) {
+			out.println("To stop the process at any time, click the <strong><font color='red'>Stop loading this page</font></strong> button on your browser.<br/><br/>");
+			response.flushBuffer();
 			int page = 1;
 			ResponseList<Status> tweets;
 			int count = 0;
@@ -49,8 +51,7 @@ public class PostUnfavorite extends HttpServlet {
 					tweets = twitter.getFavorites();
 					for (Status s : tweets) {
 						twitter.destroyFavorite(s.getId());
-						out.println(count+1 + ". Unfavorited tweet by @" +
-								s.getUser().getScreenName() + ".<br />");
+						out.println(count+1 + ". Unfavoriting <a href='https://twitter.com/" + s.getUser().getScreenName() + "/status/" + s.getId() +"' target='_blank'>tweet</a> by <a href='https://twitter.com/" + s.getUser().getScreenName() + "' target='_blank'>@" + s.getUser().getScreenName() + "</a>.<br />");
 						response.flushBuffer();
 						count++;
 					}
@@ -58,7 +59,7 @@ public class PostUnfavorite extends HttpServlet {
 				} while (tweets.size() != 0 && page < 50);
 			} catch (TwitterException te) {
 				if (te.toString().contains("Your account may not be allowed to perform this action.")) {
-					out.println("Couldn't unfavorite tweets: " + te);
+					out.println("Couldn't unfavorite tweets: " + te + "<br/>");
 					response.flushBuffer();
 					return;
 				}
@@ -80,11 +81,11 @@ public class PostUnfavorite extends HttpServlet {
 					}
 				}
 			} catch (TwitterException te) {
-				out.println("Couldn't retrieve rate-limits: " + te);
+				out.println("Couldn't retrieve rate-limits: " + te + "<br/>");
 				response.flushBuffer();
 			}
 		} else {
-			out.println("One or both of the values you entered in the previous page are incorrect. Click the Back Button on your browser to try again.");
+			out.println("One or both of the values you entered in the previous page are incorrect. Click the Back Button on your browser to try again.<br/>");
 			response.flushBuffer();
 		}
 		out.println("</body>");
