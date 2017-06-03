@@ -41,10 +41,11 @@ public class PostUnfollow extends HttpServlet {
 		String listName = request.getParameter("listName");
 		String unfollow = request.getParameter("unfollow");
 		String already2 = request.getParameter("already2");
-				
+		String already3 = request.getParameter("already3");
+
 		if (unfollow.equalsIgnoreCase("I UNDERSTAND")) {
 			List<Long> neverUnfollow = new ArrayList<Long>();
-			if (already2 != null && !already2.isEmpty()){
+			if (already2 != null && !already2.isEmpty() && already3 != null && !already3.isEmpty()){
 				long cursor2 = -1;
 				IDs friends;
 				int count = 0;
@@ -59,6 +60,17 @@ public class PostUnfollow extends HttpServlet {
 							neverUnfollow.add(id);
 						}
 					} while ((cursor2 = friends.getNextCursor()) != 0);
+					try {
+						UserList newList = twitter.createUserList("Never Unfollow", false, "Created by @warrencrasta Twitter-Tools");
+						for (int i = 0; i < neverUnfollow.size(); i += 100) {
+							List<Long> sub = neverUnfollow.subList(i, Math.min(neverUnfollow.size(),i+100));
+							twitter.createUserListMembers(newList.getId(), neverUnfollow.stream().mapToLong(l -> l).toArray());						
+						}						
+					} catch (TwitterException te) {
+						out.println("Couldn't create Never Unfollow List: " + te + "<br/>");
+						response.flushBuffer();
+						return;
+					}
 				} catch (TwitterException te) {
 					out.println("Failed to get friends' ids: " + te + "<br/>");
 					response.flushBuffer();
@@ -86,10 +98,22 @@ public class PostUnfollow extends HttpServlet {
 					/* Ignore any errors and keep running. */
 				}
 			}
-
-			out.println("<br/> <strong>" + neverUnfollow.size() + "</strong> users were added to the"
-					+ " Never Unfollow list.<br/><br/>");
-			response.flushBuffer();
+			
+			if (already2 != null && !already2.isEmpty() && already3 != null && !already3.isEmpty()) {
+				try {
+					out.println("<br/> <strong>" + neverUnfollow.size() + "</strong> users were added to the"
+							+ " <a href='https://twitter.com/" + twitter.getScreenName() + "/lists/never-unfollow' target='_blank'>Never Unfollow list</a>.<br/><br/>");
+					response.flushBuffer();
+				} catch (TwitterException te) {
+					out.println("Failed to get user's username: " + te);
+					response.flushBuffer();
+					return;
+				}
+			} else {
+				out.println("<br/> <strong>" + neverUnfollow.size() + "</strong> users were added to the"
+						+ " Never Unfollow list.<br/><br/>");
+				response.flushBuffer();
+			}
 	
 			long cursor2 = -1;
 			IDs friends;
