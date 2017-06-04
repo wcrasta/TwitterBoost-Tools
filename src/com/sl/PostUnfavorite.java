@@ -37,12 +37,32 @@ public class PostUnfavorite extends HttpServlet {
 		out.println("<h2>Results</h2>");
 
 		String unfavorite = request.getParameter("unfavorite");
+		String unfavorite1 = request.getParameter("no1");
 		String unfavorite2 = request.getParameter("unfavorite2");
 
 		Twitter twitter = (Twitter)request.getSession().getAttribute("twitter");
-		if (unfavorite.equalsIgnoreCase("yes") && unfavorite2.equalsIgnoreCase("I UNDERSTAND")) {
+		if ((unfavorite2.equalsIgnoreCase("I UNDERSTAND")) && (unfavorite.equals("yes") || unfavorite1.equals("yes"))) {
 			out.println("To stop the process at any time, click the <strong><font color='red'>Stop loading this page</font></strong> button on your browser.<br/><br/>");
 			response.flushBuffer();
+			ArrayList<Long> following = new ArrayList<Long>();
+			if (unfavorite1 != null) {
+				if (unfavorite1.equals("yes")) {
+					long cursor2 = -1;
+					IDs friends;
+					try {
+						do {
+							friends = twitter.getFriendsIDs(cursor2);
+							for (long id : friends.getIDs()) {
+								following.add(id);
+							}
+						} while ((cursor2 = friends.getNextCursor()) != 0);
+					} catch (TwitterException te) {
+						out.println("Failed to get friends' ids: " + te + "<br/>");
+						response.flushBuffer();
+						return;
+					}
+				}
+			}
 			int page = 1;
 			ResponseList<Status> tweets;
 			int count = 0;
@@ -50,10 +70,12 @@ public class PostUnfavorite extends HttpServlet {
 				do {
 					tweets = twitter.getFavorites();
 					for (Status s : tweets) {
-						twitter.destroyFavorite(s.getId());
-						out.println(count+1 + ". Unfavoriting <a href='https://twitter.com/" + s.getUser().getScreenName() + "/status/" + s.getId() +"' target='_blank'>tweet</a> by <a href='https://twitter.com/" + s.getUser().getScreenName() + "' target='_blank'>@" + s.getUser().getScreenName() + "</a>.<br />");
-						response.flushBuffer();
-						count++;
+						if (unfavorite.equals("yes") || !following.contains(s.getUser().getId())) {
+							twitter.destroyFavorite(s.getId());
+							out.println(count+1 + ". Unfavoriting <a href='https://twitter.com/" + s.getUser().getScreenName() + "/status/" + s.getId() +"' target='_blank'>tweet</a> by <a href='https://twitter.com/" + s.getUser().getScreenName() + "' target='_blank'>@" + s.getUser().getScreenName() + "</a>.<br />");
+							response.flushBuffer();
+							count++;
+						}
 					}
 					page++;
 				} while (tweets.size() != 0 && page < 50);
@@ -64,7 +86,8 @@ public class PostUnfavorite extends HttpServlet {
 					return;
 				}
 				/* Ignore any errors and keep running. */
-			}
+			} 
+
 			out.println("<h2>Twitter Rate-Limiting Info</h2>");
 			response.flushBuffer();
 

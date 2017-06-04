@@ -157,7 +157,7 @@ public class PostUnfollow extends HttpServlet {
 					if(!neverUnfollow.contains(following.get(i))){
 						try {
 							twitter.destroyFriendship(following.get(i));
-							out.println(count2+1 + ". Unfollowed <a href='https://twitter.com/" + twitter.showUser(following.get(i)).getScreenName() +"' target='_blank'>@" + twitter.showUser(following.get(i)).getScreenName() + ".</a><br/>");
+							out.println(count2+1 + ". Unfollowed <a href='https://twitter.com/" + twitter.showUser(following.get(i)).getScreenName() +"' target='_blank'>@" + twitter.showUser(following.get(i)).getScreenName() + "</a>.<br/>");
 							response.flushBuffer();
 							count2++;
 							/* Optional Delay, in seconds. */

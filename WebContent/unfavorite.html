@@ -1,22 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Unfavorite all tweets</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<title>Unfavorite tweets</title>
 <a href="index2.html">Tools Page</a>
 </head>
-<h2>Unfavorite all tweets</h2>
+<h2>Unfavorite tweets</h2>
 <body>
-	<p>Unfavorite all of your tweets.</p>
+	<p>Either unfavorite all of your tweets OR unfavorite tweets only
+		by people you do not follow.</p>
 
 
 	<form action="postUnfavorite" method="post">
-		<strong>Unfavorite all tweets:</strong> <input type="radio" name="unfavorite"
-			value="yes" required> Yes<input type="radio" name="unfavorite"
-			value="no"> No<br /><br /> <strong><font color="red">Once
-				you click submit, the server will unfavorite ALL of your tweets,
-				without stopping. If you understand, enter "I UNDERSTAND". </font></strong> <br />
-		<input type="text" name="unfavorite2" required> <br /> <br /> <input
+		<strong>Unfavorite ALL tweets:</strong> <input type="radio"
+			name="unfavorite" value="yes" required> Yes<input id="no0"
+			type="radio" name="unfavorite" value="no"> No<br />
+
+		<div id='no' style='display: none'>
+			<strong>Unfavorite tweets ONLY by people you do not follow</strong> <input id="no1"
+				type="radio" name="no1" value="yes"> Yes <input id='no2'
+				type="radio" name="no1" value="no"> No <br /><br />
+		</div>
+
+
+		<strong><font color="red">Once you click submit, the
+				server will unfavorite your tweets (as chosen above), without stopping. If you
+				understand, enter "I UNDERSTAND". </font></strong> <br /> <input type="text"
+			name="unfavorite2" required> <br /> <br /> <input
 			type="submit" value="Submit">
 	</form>
+	<script>
+		$(document).ready(
+				function() {
+					$('input[type="radio"]').click(
+							function() {
+								if ($(this).attr('id') == 'no0' || $(this).attr('id') == 'no1' || $(this).attr('id') == 'no2') {
+									$('#no').show();
+									$('#no1').prop('required', true);
+								} else {
+									$('#no').hide();
+									$('#no1').prop('required', false);
+								}
+							});
+				});
+	</script>
 </body>
 </html>
