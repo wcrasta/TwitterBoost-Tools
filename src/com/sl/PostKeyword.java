@@ -73,6 +73,7 @@ public class PostKeyword extends HttpServlet {
 			out.println("To stop the process at any time, click the <strong><font color='red'>Stop loading this page</font></strong> button on your browser.<br/><br/>");
 			response.flushBuffer();
 			/* Follow all users in the tweets list. */
+			
 			for (int i = 0; i < tweets.size(); i++){
 				Status s = tweets.get(i);
 				try {
@@ -86,6 +87,7 @@ public class PostKeyword extends HttpServlet {
 						response.flushBuffer();
 						break;
 					}
+					out.println(te);
 				}
 			}
 			out.println("<h2>Twitter Rate-Limiting Info</h2>");
