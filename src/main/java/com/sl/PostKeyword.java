@@ -87,7 +87,7 @@ public class PostKeyword extends HttpServlet {
 						response.flushBuffer();
 						break;
 					}
-					out.println(te);
+					// out.println(te);
 				}
 			}
 			out.println("<h2>Twitter Rate-Limiting Info</h2>");
@@ -108,6 +108,7 @@ public class PostKeyword extends HttpServlet {
 			} catch (TwitterException te) {
 				out.println("Couldn't retrieve rate-limits: " + te);
 				response.flushBuffer();
+				return;
 			}
 		} else {
 			out.println("The two follow numbers you entered did not match. Click the Back Button on your browser to try again.");

@@ -99,7 +99,6 @@ public class PostUnfollow extends HttpServlet {
 					out.println("Failed to get list members: " + te + "<br/>");
 					response.flushBuffer();
 					return;
-					/* Ignore any errors and keep running. */
 				}
 			}
 			if (already.equals("no") && already3.equals("yes")) {
@@ -188,6 +187,7 @@ public class PostUnfollow extends HttpServlet {
 			} catch (TwitterException te) {
 				out.println("Couldn't retrieve rate-limits: " + te + "<br />");
 				response.flushBuffer();
+				return;
 			}
 		} else {
 			out.println("You did not type \"I UNDERSTAND\" correctly. Click the Back Button on your browser to try again.<br/>");

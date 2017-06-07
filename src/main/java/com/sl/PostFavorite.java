@@ -106,6 +106,7 @@ public class PostFavorite extends HttpServlet {
 			} catch (TwitterException te) {
 				out.println("Couldn't retrieve rate-limits: " + te + "<br/>");
 				response.flushBuffer();
+				return;
 			}
 		} else {
 			out.println("The two favorite numbers you entered did not match. Click the Back Button on your browser to try again.<br/>");

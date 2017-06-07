@@ -106,6 +106,7 @@ public class PostUnfavorite extends HttpServlet {
 			} catch (TwitterException te) {
 				out.println("Couldn't retrieve rate-limits: " + te + "<br/>");
 				response.flushBuffer();
+				return;
 			}
 		} else {
 			out.println("One or both of the values you entered in the previous page are incorrect. Click the Back Button on your browser to try again.<br/>");
