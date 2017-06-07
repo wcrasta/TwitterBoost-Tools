@@ -20,10 +20,9 @@ public class DBConn {
      * To Create Connections
      */
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
+    	Class.forName("org.postgresql.Driver");
         Connection connection = null;
-        connection = DriverManager.getConnection(
-                Setup.DB_URL, Setup.DB_USERNAME, Setup.DB_PASSWORD);
+        connection = DriverManager.getConnection(Setup.DB_URL);
         return connection;
     }
 
