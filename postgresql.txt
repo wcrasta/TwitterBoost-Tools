@@ -1,6 +1,6 @@
 CREATE TABLE twitter_user (
 user_id SERIAL PRIMARY KEY NOT NULL,
-twitter_user_id integer NULL,
+twitter_user_id bigint NULL,
 screen_name varchar(45) NULL,
 access_token varchar(100) NULL,
 access_token_secret varchar(100) NULL,

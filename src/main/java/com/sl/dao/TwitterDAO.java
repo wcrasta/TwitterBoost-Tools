@@ -25,7 +25,7 @@ public class TwitterDAO {
 				while (res.next()) {
 			       pojo = new UserPojo();
 	               pojo.setUser_id(res.getInt(1));
-	               pojo.setTwitter_user_id(res.getInt(2));
+	               pojo.setTwitter_user_id(res.getLong(2));
 	               pojo.setTwitter_screen_name(res.getString(3));
 	               pojo.setAccess_token(res.getString(4));
 	               pojo.setAccess_token_secret(res.getString(5));
@@ -34,7 +34,7 @@ public class TwitterDAO {
 			DBConn.close(conn, ps, res);
 		} catch (ClassNotFoundException | SQLException e) {
 			DBConn.close(conn, ps, res);
-			throw new DBException("Excepion while accessing database");
+			throw new DBException(e.toString());
 		}
 		return pojo;
 	}
@@ -54,7 +54,7 @@ public class TwitterDAO {
 				while (res.next()) {
 				   pojo = new UserPojo();
 	               pojo.setUser_id(res.getInt(1));
-	               pojo.setTwitter_user_id(res.getInt(2));
+	               pojo.setTwitter_user_id(res.getLong(2));
 	               pojo.setTwitter_screen_name(res.getString(3));
 	               pojo.setAccess_token(res.getString(4));
 	               pojo.setAccess_token_secret(res.getString(5));
@@ -63,7 +63,7 @@ public class TwitterDAO {
 			DBConn.close(conn, ps, res);
 		} catch (ClassNotFoundException | SQLException e) {
 			DBConn.close(conn, ps, res);
-			throw new DBException("Excepion while accessing database");
+			throw new DBException(e.toString());
 		}
 		return pojo;
 	}
@@ -81,7 +81,7 @@ public class TwitterDAO {
 			DBConn.close(conn, ps);
 		} catch (ClassNotFoundException | SQLException e) {
 			DBConn.close(conn, ps);
-			throw new DBException("Excepion while accessing database");
+			throw new DBException(e.toString());
 		}
 	}
 	
@@ -100,9 +100,8 @@ public class TwitterDAO {
 			ps.executeUpdate();
 			DBConn.close(conn, ps);
 		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
 			DBConn.close(conn, ps);
-			throw new DBException("Excepion while accessing database");
+			throw new DBException(e.toString());
 		}
 	}
 
