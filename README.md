@@ -1,5 +1,7 @@
 # TwitterBoost-Tools
 
+**NOTE:** As of Sep 24, 2017, this project is no longer being maintained.
+
 A web application to boost your Twitter account stats/follower engagement. I've used these tools sporadically to grow my own Twitter account, [@warrencrasta](https://twitter.com/warrencrasta), with tremendous success. If you liked this project, or found these tools interesting, please consider starring the repository.
 
 **Link to app:** http://twitterboost-tools.herokuapp.com/
